@@ -1,1 +1,1 @@
-The printf project is a collaboration between Yvonne Gitata and Silas Abel to create a printf function
+The printf project is a collaboration between Yvonne Gitata and Sylus Abel to create a printf function
