@@ -1,61 +1,87 @@
 #include "main.h"
+#include <stdarg.h>
+
 /**
-* _printf - prints characters on stdout
-* @format: the format to be used
-* Return: printed characters
-*/
+ * _printf - produces output according to a format
+ * @format: string
+ * Return: The number of characters printed
+ * (excluding the null byte used to end output to strings)
+ */
 int _printf(const char *format, ...)
 {
-	int i, printed = 0, printed_chars = 0;
-	int flags, width, precision, size, buff_ind = 0;
-	va_list list;
-	char buffer[BUFF_SIZE];
+va_list ap;
+int i = 0, count = 0, flag = 0;
 
-	if (format == NULL)
-		return (-1);
-
-	va_start(list, format)
-
-	for (i = 0; format && format[i] != '\0'; i++)
-	{
-		if (format[i] != '%')
-		{
-			buffer[buff_ind++] = format[i];
-			if (buff_ind == BUFF_SIZE)
-				print_buffer(buffer, &buff_ind)
-
-			printed_char++;
-		}
-		else
-		{
-			print_buffer(buffer, &buff_ind);
-			flags = get_flags(format, &i);
-			width = get_width(format, &i, list);
-			precision = get_precision(format, &i, list);
-			size = get_size(format, &i);
-			++i;
-			print = handle_print(format, &i, list,
-			buffer, flags, width, precision, size);
-			if (printed == -1)
-				return (-1);
-			printed_chars += printed;
-		}
-	}
-	printed_buffer(buffer, &buff_ind);
-	va_end(list);
-	return (printed_chars);
-}
-
-/**
-* print_buffer - prints all the contents of the
-* buffer if it exists
-* @buffer: array of char
-* @buff_ind: index where the next char will be added
-* Return: void
-*/
-void print_buffer(char buffer[], int *buff_ind)
+if (format)
 {
-	if (*buff_ind > 0)
-		write(1, buffer[0], *buff_ind);
-	*buff_ind = 0;
+va_start(ap, format);
+for (; format[i] != '\0'; i++)
+{
+if (!flag)
+{
+if (format[i] != '%')
+count += _putchar(format[i]);
+else
+flag = 1;
 }
+else
+{
+switch (format[i])
+{
+case 'c':
+count += _putchar(va_arg(ap, int));
+break;
+case 's':
+count += print_str(va_arg(ap, char *));
+break;
+case '%':
+count += _putchar('%');
+break;
+case 'd':
+count += print_int(va_arg(ap, int));
+break;
+case 'i':
+count += print_int(va_arg(ap, int));
+break;
+case 'b':
+count += print_bin(va_arg(ap, unsigned int));
+break;
+case 'u':
+count += print_uns(va_arg(ap, unsigned int));
+break;
+case 'o':
+count += print_oct(va_arg(ap, unsigned int));
+break;
+case 'x':
+count += print_hex(va_arg(ap, unsigned int));
+break;
+case 'X':
+count += print_Hex(va_arg(ap, unsigned int));
+break;
+case 'S':
+count += print_Str(va_arg(ap, char *));
+break;
+case 'R':
+count += print_rot13(va_arg(ap, char *));
+break;
+case 'r':
+count += print_rev(va_arg(ap, char *));
+break;
+case '\0':
+return (-1);
+default:
+count += _putchar('%');
+count += _putchar(format[i]);
+}
+flag = 0;
+}
+}
+va_end(ap);
+}
+else
+{
+return (-1);
+}
+return (count);
+}
+
